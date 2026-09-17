@@ -11,15 +11,11 @@ public class MenuView extends BorderPane {
 
     private ComboBox<Integer> cantidadJugadores;
     private VBox camposNombres;
-
     private Button btnJugar;
-
     private ArrayList<TextField> nombres;
 
     public MenuView() {
-
         nombres = new ArrayList<>();
-
         crearVista();
     }
 
@@ -33,25 +29,17 @@ public class MenuView extends BorderPane {
                 -fx-text-fill: white;
                 """);
 
-        Label lblCantidad =
-                new Label("Número de jugadores");
+        Label lblCantidad = new Label("Número de jugadores");
 
-        lblCantidad.setStyle(
-                "-fx-text-fill: white; -fx-font-size: 16px;"
+        lblCantidad.setStyle("-fx-text-fill: white; -fx-font-size: 16px;"
         );
 
         cantidadJugadores = new ComboBox<>();
-
-        cantidadJugadores.getItems().addAll(
-                1, 2, 3, 4
-        );
+        cantidadJugadores.getItems().addAll(1, 2, 3, 4);
 
         cantidadJugadores.setValue(1);
-
         camposNombres = new VBox(10);
-
         crearCamposJugadores(1);
-
         cantidadJugadores.setOnAction(e ->
                 crearCamposJugadores(
                         cantidadJugadores.getValue()
@@ -59,7 +47,6 @@ public class MenuView extends BorderPane {
         );
 
         btnJugar = new Button("JUGAR");
-
         btnJugar.setPrefWidth(200);
         btnJugar.setPrefHeight(45);
 
@@ -73,30 +60,19 @@ public class MenuView extends BorderPane {
         );
 
         contenido.setAlignment(Pos.CENTER);
-
         setCenter(contenido);
-
         setPadding(new Insets(40));
-
         setStyle("-fx-background-color: #183d2f;");
     }
     private void crearCamposJugadores(int cantidad) {
-
         camposNombres.getChildren().clear();
         nombres.clear();
 
         for (int i = 1; i <= cantidad; i++) {
-
             TextField campo = new TextField();
-
-            campo.setPromptText(
-                    "Nombre del jugador " + i
-            );
-
+            campo.setPromptText("Nombre del jugador " + i);
             campo.setMaxWidth(300);
-
             nombres.add(campo);
-
             camposNombres.getChildren().add(campo);
         }
     }
@@ -106,15 +82,10 @@ public class MenuView extends BorderPane {
     }
 
     public ArrayList<String> getNombres() {
-
-        ArrayList<String> resultado =
-                new ArrayList<>();
+        ArrayList<String> resultado = new ArrayList<>();
 
         for (TextField campo : nombres) {
-
-            resultado.add(
-                    campo.getText().trim()
-            );
+            resultado.add(campo.getText().trim());
         }
 
         return resultado;

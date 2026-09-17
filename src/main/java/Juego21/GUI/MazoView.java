@@ -23,9 +23,6 @@ public class MazoView extends VBox {
         mazo.setFitWidth(100);
         mazo.setFitHeight(145);
         mazo.setPreserveRatio(true);
-        getChildren().addAll(
-                titulo,
-                mazo
-        );
+        getChildren().addAll(titulo, mazo);
     }
 }
