@@ -1,0 +1,81 @@
+package Juego21.GUI;
+
+import Juego21GUI.componentes.*;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+
+public class JuegoView extends BorderPane {
+
+    private Label nombreDealer;
+    private Label nombreJugador;
+    private Label mensaje;
+    private ManoView manoDealer;
+    private ManoView manoJugador;
+    private MarcadorView marcador;
+    private MazoView mazoView;
+    private Button btnStand;
+    private Button btnHit;
+    private Button btnMenu;
+
+    public JuegoView() {
+        crearVista();
+    }
+
+    private void crearVista() {
+        setPadding(new Insets(20));
+        setStyle("-fx-background-color: #12613d;");
+        nombreDealer = crearTitulo("DEALER");
+        manoDealer = new ManoView();
+        VBox dealerBox = new VBox(
+                10,
+                nombreDealer,
+                manoDealer
+        );
+
+        dealerBox.setAlignment(Pos.CENTER);
+
+        nombreJugador = crearTitulo("");
+        manoJugador = new ManoView();
+        VBox jugadorBox = new VBox(10, nombreJugador, manoJugador
+        );
+        jugadorBox.setAlignment(Pos.CENTER);
+
+        mensaje = new Label();
+        mensaje.setStyle("""
+                -fx-text-fill: #ffd54f;
+                -fx-font-size: 18px;
+                -fx-font-weight: bold;
+                """);
+        VBox centro = new VBox(35, dealerBox, mensaje, jugadorBox
+        );
+
+        centro.setAlignment(Pos.CENTER);
+        setCenter(centro);
+        marcador = new MarcadorView();
+        BorderPane.setMargin(
+                marcador,
+                new Insets(20)
+        );
+
+        setLeft(marcador);
+        mazoView = new MazoView();
+        BorderPane.setMargin(mazoView, new Insets(20));
+        setRight(mazoView);
+        btnStand = crearBoton("STAND");
+        btnHit = crearBoton("HIT");
+        btnMenu = crearBoton("MENÚ");
+
+        HBox botones = new HBox(30, btnStand, btnHit, btnMenu
+        );
+
+        botones.setAlignment(Pos.CENTER);
+        botones.setPadding(new Insets(20));
+        setBottom(botones);
+    }
+
+
+}
