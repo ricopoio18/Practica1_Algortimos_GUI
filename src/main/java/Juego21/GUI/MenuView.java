@@ -80,6 +80,44 @@ public class MenuView extends BorderPane {
 
         setStyle("-fx-background-color: #183d2f;");
     }
+    private void crearCamposJugadores(int cantidad) {
 
+        camposNombres.getChildren().clear();
+        nombres.clear();
+
+        for (int i = 1; i <= cantidad; i++) {
+
+            TextField campo = new TextField();
+
+            campo.setPromptText(
+                    "Nombre del jugador " + i
+            );
+
+            campo.setMaxWidth(300);
+
+            nombres.add(campo);
+
+            camposNombres.getChildren().add(campo);
+        }
+    }
+
+    public Button getBtnJugar() {
+        return btnJugar;
+    }
+
+    public ArrayList<String> getNombres() {
+
+        ArrayList<String> resultado =
+                new ArrayList<>();
+
+        for (TextField campo : nombres) {
+
+            resultado.add(
+                    campo.getText().trim()
+            );
+        }
+
+        return resultado;
+    }
 
 }
