@@ -1,6 +1,6 @@
 package Juego21;
 
-import DeckOfCards.*;
+import DeckOfCards.CartaInglesa;
 
 import java.util.ArrayList;
 

@@ -1,28 +1,30 @@
 package Juego21;
 
-import DeckOfCards.*;
+import DeckOfCards.CartaInglesa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Juego21 {
+
     private ArrayList<Jugador> jugadores;
     private Dealer dealer;
-    private HashMap<String,Integer> puntuaciones;
-    private HashMap<String, Boolean> ganadores;
+    private HashMap<String, Integer> puntuaciones;
+    private HashMap<String, Resultado> resultados;
 
     public Juego21() {
-        jugadores = new ArrayList<Jugador>();
+        jugadores = new ArrayList<>();
         dealer = new Dealer();
         puntuaciones = new HashMap<>();
-        ganadores = new HashMap<>();
+        resultados = new HashMap<>();
     }
 
-    public boolean añadirJugadores(String nombre){
-        if(jugadores.size() < 5){
+    public boolean añadirJugadores(String nombre) {
+        if (jugadores.size() < 5) {
             jugadores.add(new Jugador(nombre));
             return true;
         }
+
         return false;
     }
 
@@ -31,75 +33,97 @@ public class Juego21 {
             for (Jugador jugador : jugadores) {
                 CartaInglesa carta = dealer.repartirCarta();
                 if (carta != null) {
+                    carta.makeFaceUp();
                     jugador.añadirCartas(carta);
-                    sincronizarPuntos(jugador);
                 }
             }
+
             CartaInglesa cartaDealer = dealer.repartirCarta();
+
             if (cartaDealer != null) {
+                if (i == 0) {
+                    cartaDealer.makeFaceUp();
+                } else {
+                    cartaDealer.makeFaceDown();
+                }
                 dealer.añadirCartas(cartaDealer);
-                sincronizarPuntos(dealer);
             }
         }
     }
 
     public boolean pedirCartaJugador(Jugador jugador) {
+
         if (EvaluacionPuntos.estaExcedido(EvaluacionPuntos.obtenerTotalPuntos(jugador))) {
             return false;
         }
 
         CartaInglesa carta = dealer.repartirCarta();
+
         if (carta != null) {
-            boolean entregada = jugador.añadirCartas(carta);
-            sincronizarPuntos(jugador);
-            return entregada;
+            carta.makeFaceUp();
+            return jugador.añadirCartas(carta);
         }
+
         return false;
     }
 
-    public void jugarTurnoDealer() {
-        while (EvaluacionPuntos.obtenerTotalPuntos(dealer) < 17) {
-            CartaInglesa carta = dealer.repartirCarta();
-            if (carta != null) {
-                dealer.añadirCartas(carta);
-                sincronizarPuntos(dealer);
-            } else {
-                break;
-            }
+    public void revelarCartasDealer() {
+
+        for (CartaInglesa carta : dealer.getMano()) {
+            carta.makeFaceUp();
         }
     }
 
+    public CartaInglesa pedirCartaDealer() {
+        CartaInglesa carta = dealer.repartirCarta();
+        if (carta != null) {
+            carta.makeFaceUp();
+            dealer.añadirCartas(carta);
+        }
+
+        return carta;
+    }
+
+    public boolean dealerDebePedir() {
+        return EvaluacionPuntos.obtenerTotalPuntos(dealer) < 17;
+    }
+
     public void determinarGanadores() {
-        int puntosDealer = EvaluacionPuntos.obtenerTotalPuntos(dealer);
+
+        int puntosDealer = dealer.getPuntos();
         puntuaciones.put(dealer.getNombre(), puntosDealer);
 
         for (Jugador jugador : jugadores) {
-            int puntosJugador = EvaluacionPuntos.obtenerTotalPuntos(jugador);
+            int puntosJugador = jugador.getPuntos();
             puntuaciones.put(jugador.getNombre(), puntosJugador);
+            Resultado resultado;
 
-            boolean victoria = EvaluacionPuntos.esVictoria(puntosJugador, puntosDealer);
-            ganadores.put(jugador.getNombre(), victoria);
+            if (puntosJugador > 21) {
+                resultado = Resultado.PERDEDOR;
+            } else if (puntosDealer > 21) {
+                resultado = Resultado.GANADOR;
+            } else if (puntosJugador > puntosDealer) {
+                resultado = Resultado.GANADOR;
+            } else if (puntosJugador < puntosDealer) {
+                resultado = Resultado.PERDEDOR;
+            } else {
+                resultado = Resultado.EMPATE;
+            }
+
+            resultados.put(jugador.getNombre(), resultado);
         }
     }
 
     public void reiniciarRonda() {
         for (Jugador jugador : jugadores) {
             jugador.limpiarMano();
-            sincronizarPuntos(jugador);
         }
+
         dealer.limpiarMano();
-        sincronizarPuntos(dealer);
-
+        dealer.reiniciarMazo();
         puntuaciones.clear();
-        ganadores.clear();
+        resultados.clear();
     }
-
-    private void sincronizarPuntos(Jugador jugador) {
-        int totalCalculado = EvaluacionPuntos.obtenerTotalPuntos(jugador);
-        int diferencia = totalCalculado - jugador.getPuntos();
-        jugador.sumarPuntos(diferencia);
-    }
-
 
     public ArrayList<Jugador> getJugadores() {
         return jugadores;
@@ -113,8 +137,7 @@ public class Juego21 {
         return puntuaciones;
     }
 
-    public HashMap<String, Boolean> getGanadores() {
-        return ganadores;
+    public HashMap<String, Resultado> getResultados() {
+        return resultados;
     }
 }
-
