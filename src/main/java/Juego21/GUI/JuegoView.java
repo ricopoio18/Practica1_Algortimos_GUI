@@ -76,6 +76,28 @@ public class JuegoView extends BorderPane {
         botones.setPadding(new Insets(20));
         setBottom(botones);
     }
+    private Label crearTitulo(String texto) {
+        Label label = new Label(texto);
+        label.setStyle("""
+                -fx-font-size: 22px;
+                -fx-font-weight: bold;
+                -fx-text-fill: white;
+                """);
 
+        return label;
+    }
+
+    private Button crearBoton(String texto) {
+
+        Button boton = new Button(texto);
+        boton.setPrefWidth(140);
+        boton.setPrefHeight(45);
+        boton.setStyle("""
+                -fx-font-size: 16px;
+                -fx-font-weight: bold;
+                """);
+
+        return boton;
+    }
 
 }
