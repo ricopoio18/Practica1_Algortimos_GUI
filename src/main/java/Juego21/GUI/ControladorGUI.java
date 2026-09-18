@@ -90,5 +90,24 @@ public class ControladorGUI {
         modelo.determinarGanadores();
         actualizarVistaFinal();
     }
+    private Jugador obtenerJugadorActual() {
+        return modelo.getJugadores().get(jugadorActual);
+    }
 
+    private void actualizarVista() {
+        Jugador jugador = obtenerJugadorActual();
+        juegoView.setNombreJugador(jugador.getNombre());
+        juegoView.getManoJugador().mostrarMano(jugador.getMano());
+        juegoView.getManoDealer().mostrarMano(modelo.getDealer().getMano());
+
+        juegoView.getMarcador().actualizar(modelo.getJugadores());
+
+        juegoView.mostrarMensaje("Turno de " + jugador.getNombre());
+    }
+
+    private void actualizarVistaFinal() {
+        juegoView.getManoDealer().mostrarMano(modelo.getDealer().getMano());
+        juegoView.getMarcador().actualizar(modelo.getJugadores());
+        juegoView.mostrarMensaje("Ronda terminada");
+    }
 }
