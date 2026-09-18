@@ -1,6 +1,5 @@
 package Juego21.GUI;
 
-import Juego21GUI.componentes.*;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -98,6 +97,48 @@ public class JuegoView extends BorderPane {
                 """);
 
         return boton;
+    }
+
+    public ManoView getManoDealer() {
+        return manoDealer;
+    }
+
+    public ManoView getManoJugador() {
+        return manoJugador;
+    }
+
+    public MarcadorView getMarcador() {
+        return marcador;
+    }
+
+    public Button getBtnStand() {
+        return btnStand;
+    }
+
+    public Button getBtnHit() {
+        return btnHit;
+    }
+
+    public Button getBtnMenu() {
+        return btnMenu;
+    }
+
+    public void setNombreJugador(String nombre) {
+        nombreJugador.setText(nombre);
+    }
+
+    public void mostrarMensaje(String texto) {
+        mensaje.setText(texto);
+    }
+
+    public void bloquearAcciones() {
+        btnHit.setDisable(true);
+        btnStand.setDisable(true);
+    }
+
+    public void habilitarAcciones() {
+        btnHit.setDisable(false);
+        btnStand.setDisable(false);
     }
 
 }
