@@ -18,12 +18,19 @@ public class CartaView extends ImageView {
 
     public void actualizar(CartaInglesa carta) {
         String ruta;
+
+        System.out.println("Valor: " + carta.getValor());
+        System.out.println("Palo: " + carta.getPalo());
+        System.out.println("FaceUp: " + carta.isFaceup());
+
         if (!carta.isFaceup()) {
             ruta = "/Cartas/Carta_Volteada.png";
-
         } else {
             ruta = obtenerRutaCarta(carta);
         }
+
+        System.out.println("Buscando imagen: " + ruta);
+        System.out.println("Encontrada: " + getClass().getResource(ruta));
 
         Image imagen = new Image(getClass().getResourceAsStream(ruta));
         setImage(imagen);

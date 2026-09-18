@@ -3,7 +3,6 @@ package Juego21.GUI;
 import Juego21.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 
 public class ControladorGUI {
@@ -11,8 +10,8 @@ public class ControladorGUI {
     private Juego21 modelo;
     private MenuView menuView;
     private JuegoView juegoView;
-
     private int jugadorActual;
+
     public ControladorGUI(Stage stage) {
         this.stage = stage;
     }
@@ -25,42 +24,53 @@ public class ControladorGUI {
     }
 
     private void iniciarJuego() {
-        ArrayList<String> nombres =
-                menuView.getNombres();
+        ArrayList<String> nombres = menuView.getNombres();
 
         if (nombres.isEmpty()) {
             return;
         }
+
         for (String nombre : nombres) {
             if (nombre.isBlank()) {
                 return;
             }
         }
+
         modelo = new Juego21();
+
         for (String nombre : nombres) {
             modelo.añadirJugadores(nombre);
         }
-        modelo.repartirCartasIniciales();
-        jugadorActual = 0;
+
         juegoView = new JuegoView();
         Scene escena = new Scene(juegoView, 1200, 750);
-
         stage.setScene(escena);
         configurarBotones();
-        actualizarVista();
+        iniciarRonda();
     }
 
+    private void iniciarRonda() {
+        modelo.reiniciarRonda();
+        modelo.repartirCartasIniciales();
+        jugadorActual = 0;
+        juegoView.ocultarResultados();
+        juegoView.habilitarAcciones();
+        actualizarVista();
+        comprobarTurno();
+    }
     private void configurarBotones() {
-
         juegoView.getBtnHit().setOnAction(e -> hit());
         juegoView.getBtnStand().setOnAction(e -> stand());
         juegoView.getBtnMenu().setOnAction(e -> mostrarMenu());
+        juegoView.getBtnNuevaRonda().setOnAction(e -> iniciarRonda());
+        juegoView.getBtnVolverMenu().setOnAction(e -> mostrarMenu());
     }
 
     private void hit() {
         Jugador jugador = obtenerJugadorActual();
         modelo.pedirCartaJugador(jugador);
         actualizarVista();
+
         if (jugador.getPuntos() >= 21) {
             siguienteJugador();
         }
@@ -70,26 +80,37 @@ public class ControladorGUI {
         siguienteJugador();
     }
 
+    private void comprobarTurno() {
+        Jugador jugador = obtenerJugadorActual();
+
+        if (jugador.getPuntos() >= 21) {
+            siguienteJugador();
+        }
+    }
+
     private void siguienteJugador() {
         jugadorActual++;
+
         if (jugadorActual < modelo.getJugadores().size()) {
             actualizarVista();
-
+            comprobarTurno();
         } else {
             turnoDealer();
         }
     }
 
     private void turnoDealer() {
-
         juegoView.bloquearAcciones();
         modelo.revelarCartasDealer();
+
         while (modelo.dealerDebePedir()) {
             modelo.pedirCartaDealer();
         }
+
         modelo.determinarGanadores();
         actualizarVistaFinal();
     }
+
     private Jugador obtenerJugadorActual() {
         return modelo.getJugadores().get(jugadorActual);
     }
@@ -99,9 +120,7 @@ public class ControladorGUI {
         juegoView.setNombreJugador(jugador.getNombre());
         juegoView.getManoJugador().mostrarMano(jugador.getMano());
         juegoView.getManoDealer().mostrarMano(modelo.getDealer().getMano());
-
         juegoView.getMarcador().actualizar(modelo.getJugadores());
-
         juegoView.mostrarMensaje("Turno de " + jugador.getNombre());
     }
 
@@ -109,5 +128,33 @@ public class ControladorGUI {
         juegoView.getManoDealer().mostrarMano(modelo.getDealer().getMano());
         juegoView.getMarcador().actualizar(modelo.getJugadores());
         juegoView.mostrarMensaje("Ronda terminada");
+        mostrarResultado();
+    }
+
+    private void mostrarResultado() {
+        StringBuilder mensaje = new StringBuilder();
+
+        mensaje.append("DEALER: ")
+                .append(modelo.getDealer().getPuntos())
+                .append("\n\n");
+
+        for (Jugador jugador : modelo.getJugadores()) {
+            Resultado resultado = modelo.getResultados().get(jugador.getNombre());
+            mensaje.append(jugador.getNombre())
+                    .append("   ")
+                    .append(jugador.getPuntos())
+                    .append("   ");
+
+            if (resultado == Resultado.GANADOR) {
+                mensaje.append("GANADOR");
+            } else if (resultado == Resultado.PERDEDOR) {
+                mensaje.append("PERDEDOR");
+            } else {
+                mensaje.append("EMPATE");
+            }
+            mensaje.append("\n");
+        }
+
+        juegoView.mostrarResultados(mensaje.toString());
     }
 }

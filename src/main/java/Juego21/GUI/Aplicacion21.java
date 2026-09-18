@@ -8,9 +8,7 @@ public class Aplicacion21 extends Application {
     @Override
     public void start(Stage stage) {
 
-        ControladorGUI controlador =
-                new ControladorGUI(stage);
-
+        ControladorGUI controlador = new ControladorGUI(stage);
         controlador.mostrarMenu();
         stage.setTitle("Juego 21");
         stage.setWidth(1200);
