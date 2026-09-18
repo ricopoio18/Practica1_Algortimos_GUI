@@ -13,4 +13,5 @@ module org.example.practica1_gui_algoritmos {
 
     opens org.example.practica1_gui_algoritmos to javafx.fxml;
     exports org.example.practica1_gui_algoritmos;
+    exports Juego21.GUI;
 }
