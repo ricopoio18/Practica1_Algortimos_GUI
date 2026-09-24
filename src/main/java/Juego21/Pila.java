@@ -52,4 +52,15 @@ public class Pila<T> {
         return tope +=1;
     }
 
+    public T peek(){
+        T dato = null;
+        if(pila_vacia()){
+            System.out.println("Subdesbordamiento");
+        }
+        else {
+            dato = pila[tope];
+        }
+        return dato;
+    }
+
 }
