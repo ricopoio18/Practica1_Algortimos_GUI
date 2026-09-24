@@ -48,4 +48,8 @@ public class Pila<T> {
         return dato;
     }
 
+    public int size(){
+        return tope +=1;
+    }
+
 }
