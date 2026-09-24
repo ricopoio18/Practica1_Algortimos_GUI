@@ -7,11 +7,11 @@ import java.util.ArrayList;
 public class Jugador {
 
     private String nombre;
-    private ArrayList<CartaInglesa> mano;
+    private Pila<CartaInglesa> mano;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
-        mano = new ArrayList<>();
+        mano = new Pila<CartaInglesa>();
     }
 
     public boolean añadirCartas(CartaInglesa carta) {
@@ -19,15 +19,17 @@ public class Jugador {
             return false;
         }
 
-        mano.add(carta);
+        mano.push(carta);
         return true;
     }
 
     public void limpiarMano() {
-        mano.clear();
+        for(int i = 0; i < mano.size(); i ++){
+            mano.pop();
+        }
     }
 
-    public ArrayList<CartaInglesa> getMano() {
+    public Pila<CartaInglesa> getMano() {
         return mano;
     }
 
