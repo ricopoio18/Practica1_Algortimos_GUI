@@ -19,4 +19,8 @@ public class Dealer extends Jugador {
     public void reiniciarMazo() {
         mazo = new Mazo();
     }
+
+    public void devolverCarta(CartaInglesa carta) {
+        mazo.devolverCarta(carta);
+    }
 }
