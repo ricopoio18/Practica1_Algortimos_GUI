@@ -24,7 +24,7 @@ public class Jugador {
     }
 
     public void limpiarMano() {
-        for(int i = 0; i < mano.size(); i ++){
+        while (!mano.pila_vacia()) {
             mano.pop();
         }
     }
