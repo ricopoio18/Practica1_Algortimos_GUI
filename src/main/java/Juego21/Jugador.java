@@ -40,4 +40,11 @@ public class Jugador {
     public int getPuntos() {
         return EvaluacionPuntos.obtenerTotalPuntos(this);
     }
+
+    public CartaInglesa quitarUltimaCarta() {
+        if (mano.pila_vacia()) {
+            return null;
+        }
+        return mano.pop();
+    }
 }
