@@ -51,6 +51,12 @@ public class Mazo {
         }
     }
 
+    public void devolverCarta(CartaInglesa carta) {
+        if (carta != null) {
+            cartas.push(carta);
+            mezclar();
+        }
+    }
 
     @Override
     public String toString() {
