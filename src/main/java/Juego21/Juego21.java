@@ -12,11 +12,17 @@ public class Juego21 {
     private HashMap<String, Integer> puntuaciones;
     private HashMap<String, Resultado> resultados;
 
+    private Pila<Movimiento> movimientos;
+
     public Juego21() {
         jugadores = new Pila<Jugador>(4);
         dealer = new Dealer();
         puntuaciones = new HashMap<>();
         resultados = new HashMap<>();
+
+        movimientos = new Pila<Movimiento>(52);
+
+
     }
 
     public boolean añadirJugadores(String nombre) {
