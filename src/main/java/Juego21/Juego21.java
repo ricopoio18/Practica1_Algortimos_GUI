@@ -77,7 +77,12 @@ public class Juego21 {
 
         if (carta != null) {
             carta.makeFaceUp();
-            return jugador.añadirCartas(carta);
+            boolean agregada = jugador.añadirCartas(carta);
+            if (agregada) {
+                movimientos.push(new Movimiento(jugador, carta));
+            }
+
+            return agregada;
         }
 
         return false;
