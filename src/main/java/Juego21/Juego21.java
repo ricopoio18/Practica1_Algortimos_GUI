@@ -199,7 +199,10 @@ public class Juego21 {
             return false;
         }
         movimientos.pop();
-        jugador.quitarUltimaCarta();
+        CartaInglesa carta = jugador.quitarUltimaCarta();
+        if (carta != null) {
+            dealer.devolverCarta(carta);
+        }
 
         return true;
     }
