@@ -21,6 +21,9 @@ public class JuegoView extends BorderPane {
     private Button btnNuevaRonda;
     private Button btnVolverMenu;
 
+    private Button btnUndo;
+
+
     public JuegoView() {
         crearVista();
     }
@@ -69,8 +72,9 @@ public class JuegoView extends BorderPane {
         btnStand = crearBoton("STAND");
         btnHit = crearBoton("HIT");
         btnMenu = crearBoton("MENÚ");
+        btnUndo = new Button("UNDO");
 
-        HBox botones = new HBox(20, btnStand, btnHit, btnMenu);
+        HBox botones = new HBox(20, btnStand, btnHit, btnMenu, btnUndo);
         botones.setAlignment(Pos.CENTER);
         botones.setPadding(new Insets(20, 0, 5, 0));
         setBottom(botones);
@@ -182,5 +186,9 @@ public class JuegoView extends BorderPane {
 
     public Button getBtnVolverMenu() {
         return btnVolverMenu;
+    }
+
+    public Button getBtnUndo() {
+        return btnUndo;
     }
 }
