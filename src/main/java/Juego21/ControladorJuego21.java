@@ -25,8 +25,14 @@ public class ControladorJuego21 {
             modelo.repartirCartasIniciales();
             vista.mostrarCartaVisibleDealer(modelo.getDealer());
 
-            for (Jugador jugador : modelo.getJugadores()) {
-                ejecutarTurno(jugador);
+            Pila<Jugador> pila = new Pila<Jugador>();
+            for(int j = 0; j < modelo.getJugadores().size(); j++){
+                pila.push(modelo.getJugadores().pop());
+
+            }
+            for(int i = 0; i < pila.size(); i++){
+                ejecutarTurno(pila.peek());
+                modelo.getJugadores().push(pila.pop());
             }
 
             ejecutarTurnoDealer();
