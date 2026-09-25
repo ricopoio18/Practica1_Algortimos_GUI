@@ -188,4 +188,19 @@ public class Juego21 {
     public HashMap<String, Resultado> getResultados() {
         return resultados;
     }
+
+    public boolean deshacerMovimiento(Jugador jugador) {
+
+        if (movimientos.pila_vacia()) {
+            return false;
+        }
+        Movimiento movimiento = movimientos.peek();
+        if (movimiento.getJugador() != jugador) {
+            return false;
+        }
+        movimientos.pop();
+        jugador.quitarUltimaCarta();
+
+        return true;
+    }
 }
