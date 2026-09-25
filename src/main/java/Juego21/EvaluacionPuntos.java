@@ -6,21 +6,29 @@ import java.util.ArrayList;
 
 public class EvaluacionPuntos {
 
-    public static int obtenerTotalPuntos(ArrayList<CartaInglesa> conjuntoCartas) {
+    public static int obtenerTotalPuntos(Pila<CartaInglesa> conjuntoCartas) {
+
         int acumulado = 0;
         int contadorAses = 0;
 
-        for (CartaInglesa carta : conjuntoCartas) {
-            int valorCarta = carta.getValor();
+        Pila<CartaInglesa> auxiliar = new Pila<CartaInglesa>();
+        while (!conjuntoCartas.pila_vacia()) {
+            auxiliar.push(conjuntoCartas.pop());
+        }
 
+        while (!auxiliar.pila_vacia()) {
+            CartaInglesa carta = auxiliar.pop();
+            int valorCarta = carta.getValor();
             if (valorCarta >= 2 && valorCarta <= 10) {
                 acumulado += valorCarta;
             } else if (valorCarta >= 11 && valorCarta <= 13) {
                 acumulado += 10;
+
             } else if (valorCarta == 14) {
                 acumulado += 11;
                 contadorAses++;
             }
+            conjuntoCartas.push(carta);
         }
 
         while (acumulado > 21 && contadorAses > 0) {
