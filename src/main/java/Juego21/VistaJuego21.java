@@ -72,7 +72,7 @@ public class VistaJuego21 {
         System.out.println("El Dealer se planta.");
     }
 
-    public void mostrarResultadosFinales(Dealer dealer, ArrayList<Jugador> jugadores, HashMap<String, Integer> puntuaciones, HashMap<String, Resultado> resultados) {
+    public void mostrarResultadosFinales(Dealer dealer, Pila<Jugador> jugadores, HashMap<String, Integer> puntuaciones, HashMap<String, Resultado> resultados) {
 
         System.out.println("\n--- Resultados ---");
         int puntosDealer = puntuaciones.get(dealer.getNombre());
@@ -84,13 +84,17 @@ public class VistaJuego21 {
         boolean dealerGanoContraTodos = true;
         boolean todosEmpataron = true;
 
-        for (Jugador jugador : jugadores) {
+        Pila<Jugador> pila = new Pila<Jugador>();
+        for(int j = 0; j < jugadores.size(); j++){
+            pila.push(jugadores.pop());
 
-            String nombre = jugador.getNombre();
+        }
+        for (int i = 0; i < pila.size(); i++) {
+            String nombre = pila.peek().getNombre();
             int puntosJugador = puntuaciones.get(nombre);
             Resultado resultado = resultados.get(nombre);
             System.out.println(
-                    nombre + ": " + puntosJugador + " puntos " + jugador.getMano() + " -> " + resultado
+                    nombre + ": " + puntosJugador + " puntos " + pila.peek().getMano() + " -> " + resultado
             );
 
             if (resultado != Resultado.PERDEDOR) {
@@ -102,6 +106,7 @@ public class VistaJuego21 {
             }
         }
 
+
         if (dealerGanoContraTodos) {
 
             System.out.println("\nDealer gana la ronda.");
@@ -110,9 +115,17 @@ public class VistaJuego21 {
             System.out.println("\nLa ronda termina en empate.");
 
         } else if (jugadores.size() == 1) {
-            Jugador jugador = jugadores.get(0);
-            Resultado resultado = resultados.get(jugador.getNombre());
+            Pila<Jugador> pilaTemporal = new Pila<Jugador>();
+            for(int j = 0; j < jugadores.size(); j++){
+                pila.push(jugadores.pop());
 
+            }
+            Jugador jugador = pilaTemporal.peek();
+            Resultado resultado = resultados.get(jugador.getNombre());
+            for(int j = 0; j < pilaTemporal.size(); j++){
+                jugadores.push(pilaTemporal.pop());
+
+            }
             if (resultado == Resultado.GANADOR) {
                 System.out.println("\n" + jugador.getNombre() + " gana la ronda.");
 
