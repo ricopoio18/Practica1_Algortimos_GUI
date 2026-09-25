@@ -7,21 +7,21 @@ import java.util.HashMap;
 
 public class Juego21 {
 
-    private ArrayList<Jugador> jugadores;
+    private Pila<Jugador> jugadores;
     private Dealer dealer;
     private HashMap<String, Integer> puntuaciones;
     private HashMap<String, Resultado> resultados;
 
     public Juego21() {
-        jugadores = new ArrayList<>();
+        jugadores = new Pila<Jugador>(4);
         dealer = new Dealer();
         puntuaciones = new HashMap<>();
         resultados = new HashMap<>();
     }
 
     public boolean añadirJugadores(String nombre) {
-        if (jugadores.size() < 5) {
-            jugadores.add(new Jugador(nombre));
+        if (jugadores.size() < 4) {
+            jugadores.push(new Jugador(nombre));
             return true;
         }
 
@@ -29,17 +29,27 @@ public class Juego21 {
     }
 
     public void repartirCartasIniciales() {
-        for (int i = 0; i < 2; i++) {
-            for (Jugador jugador : jugadores) {
+
+        Pila<Jugador> auxiliar = new Pila<Jugador>(4);
+        while (!jugadores.pila_vacia()) {
+            auxiliar.push(jugadores.pop());
+        }
+
+        while (!auxiliar.pila_vacia()) {
+            Jugador jugador = auxiliar.pop();
+            for (int i = 0; i < 2; i++) {
+
                 CartaInglesa carta = dealer.repartirCarta();
+
                 if (carta != null) {
                     carta.makeFaceUp();
                     jugador.añadirCartas(carta);
                 }
             }
-
+            jugadores.push(jugador);
+        }
+        for (int i = 0; i < 2; i++) {
             CartaInglesa cartaDealer = dealer.repartirCarta();
-
             if (cartaDealer != null) {
                 if (i == 0) {
                     cartaDealer.makeFaceUp();
@@ -68,9 +78,14 @@ public class Juego21 {
     }
 
     public void revelarCartasDealer() {
-
-        for (CartaInglesa carta : dealer.getMano()) {
+        Pila<CartaInglesa> auxiliar = new Pila<CartaInglesa>();
+        while (!dealer.getMano().pila_vacia()) {
+            auxiliar.push(dealer.getMano().pop());
+        }
+        while (!auxiliar.pila_vacia()) {
+            CartaInglesa carta = auxiliar.pop();
             carta.makeFaceUp();
+            dealer.añadirCartas(carta);
         }
     }
 
@@ -92,31 +107,53 @@ public class Juego21 {
 
         int puntosDealer = dealer.getPuntos();
         puntuaciones.put(dealer.getNombre(), puntosDealer);
+        Pila<Jugador> auxiliar = new Pila<Jugador>(4);
 
-        for (Jugador jugador : jugadores) {
+        while (!jugadores.pila_vacia()) {
+            auxiliar.push(jugadores.pop());
+        }
+
+        while (!auxiliar.pila_vacia()) {
+            Jugador jugador = auxiliar.pop();
             int puntosJugador = jugador.getPuntos();
             puntuaciones.put(jugador.getNombre(), puntosJugador);
+
             Resultado resultado;
 
             if (puntosJugador > 21) {
                 resultado = Resultado.PERDEDOR;
+
             } else if (puntosDealer > 21) {
                 resultado = Resultado.GANADOR;
+
             } else if (puntosJugador > puntosDealer) {
                 resultado = Resultado.GANADOR;
             } else if (puntosJugador < puntosDealer) {
                 resultado = Resultado.PERDEDOR;
+
             } else {
                 resultado = Resultado.EMPATE;
             }
 
             resultados.put(jugador.getNombre(), resultado);
+
+            jugadores.push(jugador);
         }
     }
-
     public void reiniciarRonda() {
-        for (Jugador jugador : jugadores) {
+
+        Pila<Jugador> auxiliar = new Pila<Jugador>(4);
+        int cantidad = jugadores.size();
+
+        for (int i = 0; i < cantidad; i++) {
+            auxiliar.push(jugadores.pop());
+        }
+
+        cantidad = auxiliar.size();
+        for (int i = 0; i < cantidad; i++) {
+            Jugador jugador = auxiliar.pop();
             jugador.limpiarMano();
+            jugadores.push(jugador);
         }
 
         dealer.limpiarMano();
@@ -125,7 +162,7 @@ public class Juego21 {
         resultados.clear();
     }
 
-    public ArrayList<Jugador> getJugadores() {
+    public Pila<Jugador> getJugadores() {
         return jugadores;
     }
 
