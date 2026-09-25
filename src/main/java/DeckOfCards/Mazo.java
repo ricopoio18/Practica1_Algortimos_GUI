@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Mazo {
-    private Pila<CartaInglesa> cartas = new Pila<CartaInglesa>();
+    private Pila<CartaInglesa> cartas = new Pila<CartaInglesa>(52);
 
     public Mazo() {
         llenar(); // crea todas las cartas, excluyendo Jokers
@@ -34,15 +34,14 @@ public class Mazo {
     }
     private void mezclar() {
         ArrayList<CartaInglesa> listaMezclada = new ArrayList<>();
-        for(int i = 0; i < cartas.size(); i++) {
+        while (!cartas.pila_vacia()) {
             listaMezclada.add(cartas.pop());
         }
         Collections.shuffle(listaMezclada);
-        for(CartaInglesa c: listaMezclada){
-            cartas.push(c);
+        for (CartaInglesa carta : listaMezclada) {
+            cartas.push(carta);
         }
     }
-
     private void llenar() {
         for (int i = 2; i <= 14 ; i++) {
             for (Palo palo : Palo.values()) {

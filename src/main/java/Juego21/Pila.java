@@ -16,10 +16,7 @@ public class Pila<T> {
     }
 
     public boolean pila_llena(){
-        if (tope == pila.length){
-            return true;
-        }
-        return false;
+        return tope >= pila.length - 1;
     }
 
     public boolean pila_vacia(){
@@ -48,8 +45,8 @@ public class Pila<T> {
         return dato;
     }
 
-    public int size(){
-        return tope +=1;
+    public int size() {
+        return tope + 1;
     }
 
     public T peek(){
