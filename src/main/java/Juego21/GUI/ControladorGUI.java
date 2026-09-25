@@ -67,10 +67,18 @@ public class ControladorGUI {
     }
 
     private void hit() {
-        Jugador jugador = obtenerJugadorActual();
-        modelo.pedirCartaJugador(jugador);
-        actualizarVista();
 
+        Jugador jugador = obtenerJugadorActual();
+        if (jugador == null) {
+            return;
+        }
+        boolean recibioCarta = modelo.pedirCartaJugador(jugador);
+
+        if (!recibioCarta) {
+            siguienteJugador();
+            return;
+        }
+        actualizarVista();
         if (jugador.getPuntos() >= 21) {
             siguienteJugador();
         }
@@ -112,7 +120,24 @@ public class ControladorGUI {
     }
 
     private Jugador obtenerJugadorActual() {
-        return modelo.getJugadores().get(jugadorActual);
+
+        Pila<Jugador> auxiliar = new Pila<Jugador>(4);
+        Jugador encontrado = null;
+        while (!modelo.getJugadores().pila_vacia()) {
+            auxiliar.push(modelo.getJugadores().pop());
+        }
+
+        int indice = 0;
+
+        while (!auxiliar.pila_vacia()) {
+            Jugador jugador = auxiliar.pop();
+            if (indice == jugadorActual) {
+                encontrado = jugador;
+            }
+            modelo.getJugadores().push(jugador);
+            indice++;
+        }
+        return encontrado;
     }
 
     private void actualizarVista() {
@@ -133,13 +158,20 @@ public class ControladorGUI {
 
     private void mostrarResultado() {
         StringBuilder mensaje = new StringBuilder();
-
         mensaje.append("DEALER: ")
                 .append(modelo.getDealer().getPuntos())
                 .append("\n\n");
 
-        for (Jugador jugador : modelo.getJugadores()) {
+        Pila<Jugador> auxiliar = new Pila<Jugador>(4);
+
+        while (!modelo.getJugadores().pila_vacia()) {
+            auxiliar.push(modelo.getJugadores().pop());
+        }
+
+        while (!auxiliar.pila_vacia()) {
+            Jugador jugador = auxiliar.pop();
             Resultado resultado = modelo.getResultados().get(jugador.getNombre());
+
             mensaje.append(jugador.getNombre())
                     .append("   ")
                     .append(jugador.getPuntos())
@@ -147,12 +179,15 @@ public class ControladorGUI {
 
             if (resultado == Resultado.GANADOR) {
                 mensaje.append("GANADOR");
+
             } else if (resultado == Resultado.PERDEDOR) {
                 mensaje.append("PERDEDOR");
+
             } else {
                 mensaje.append("EMPATE");
             }
             mensaje.append("\n");
+            modelo.getJugadores().push(jugador);
         }
 
         juegoView.mostrarResultados(mensaje.toString());
