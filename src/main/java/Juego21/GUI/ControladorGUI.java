@@ -64,6 +64,7 @@ public class ControladorGUI {
         juegoView.getBtnMenu().setOnAction(e -> mostrarMenu());
         juegoView.getBtnNuevaRonda().setOnAction(e -> iniciarRonda());
         juegoView.getBtnVolverMenu().setOnAction(e -> mostrarMenu());
+        juegoView.getBtnUndo().setOnAction(e -> undo());
     }
 
     private void hit() {
@@ -191,5 +192,17 @@ public class ControladorGUI {
         }
 
         juegoView.mostrarResultados(mensaje.toString());
+    }
+
+    private void undo() {
+
+        Jugador jugador = obtenerJugadorActual();
+        if (jugador == null) {
+            return;
+        }
+        boolean deshecho = modelo.deshacerMovimiento(jugador);
+        if (deshecho) {
+            actualizarVista();
+        }
     }
 }
